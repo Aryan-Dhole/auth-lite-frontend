@@ -1,8 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Register from "./components/Register"
+import Register from "./pages/Register"
 import Home from "./pages/home"
-import Login from "./components/Login"
-import Profile from "./components/profile"
+import Login from "./pages/Login"
+import Profile from "./pages/profile"
+import IdeaVault from "./pages/IdeaVault"
+import PrivateRoute from "./components/PrivateRoute"
 
 function App() {
 
@@ -13,6 +15,15 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/ideavault"
+          element={
+            <PrivateRoute>
+              <IdeaVault />
+            </PrivateRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   )

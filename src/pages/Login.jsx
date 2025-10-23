@@ -17,7 +17,7 @@ function Login() {
             localStorage.setItem("token", res.data.token);
             setMessage(res.data.msg || "Login Successful!");
             console.log(res.data);
-            navigate("/profile")
+            navigate("/ideavault")
 
         } catch (err) {
             setMessage("Login failed. Please check the credentials.");
