@@ -1,12 +1,13 @@
 import { useState } from "react";
 import API from "../utils/axiosInstance";
-
+import { useNavigate } from "react-router-dom";
 
 function Register() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMesaage] = useState("");
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -14,6 +15,7 @@ function Register() {
         try {
             const res = await API.post("/auth/register", { email, password });
             setMesaage(res.data.msg || "Registered successfully!")
+            setTimeout(() => navigate("/login"), 2000);
         } catch (err) {
             setMesaage(err.response?.data?.msg || "Registration Failed!")
         };
@@ -28,7 +30,7 @@ function Register() {
                 className="bg-gray-800 p-8 shadow-xl rounded-2xl w-96 space-y-4"
             >
                 <h2
-                    className="text-2xl font-bold text-center ">
+                    className="text-2xl font-bold text-center underline mb-6">
                     Register
                 </h2>
 
@@ -53,6 +55,16 @@ function Register() {
                 >
                     Register
                 </button>
+                <p className="text-center text-gray-400 mt-4">
+                    Already have an account?{" "}
+                    <span
+                        onClick={() => navigate("/login")}
+                        className="text-blue-400 hover:text-blue-500 cursor-pointer underline"
+                    >
+                        Login
+                    </span>
+                </p>
+
                 {message && (
                     <p className="text-center text-sm text-gray-300 mt-2">{message}</p>
                 )}

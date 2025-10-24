@@ -6,7 +6,7 @@ const Home = () => {
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white text-center">
             <h1 className="text-4xl font-bold text-gray-400 mb-6">
-                Welcome to Auth-Lite 🚀
+                Welcome to Auth-Lite!
             </h1>
             <p className="text-gray-200 mb-8 text-lg">
                 Simple authentication made powerful — login or create your account.
