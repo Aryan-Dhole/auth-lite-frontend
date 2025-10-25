@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import API from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 
 export default function IdeaVault() {
@@ -42,7 +43,6 @@ export default function IdeaVault() {
         if (!title) return alert("Enter a title!");
 
         const newIdea = {
-            _id: Date.now(),
             title,
             description
         }
@@ -60,6 +60,7 @@ export default function IdeaVault() {
             setTitle("");
             setDescription("");
             fetchIdeas(token)
+            toast.success("Idea added successfully!")
         } catch (err) {
             console.error("Add failed:", err);
         }
@@ -69,17 +70,20 @@ export default function IdeaVault() {
     const deleteIdea = async (id) => {
         const token = localStorage.getItem("token");
 
-        setIdeas((prevIdeas) => prevIdeas.filter((idea) => idea._id !== id))
+        setIdeas((prevIdeas) => prevIdeas.filter((Idea) => Idea._id !== id));
 
         try {
             await API.delete(`/ideas/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            fetchIdeas(token);
+            toast.success("Idea deleted!");
         } catch (err) {
             console.error("Delete Failed:", err);
+            toast.error("Delete failed, please retry.");
+            fetchIdeas(token);
         }
     };
+
 
 
     return (
@@ -133,7 +137,7 @@ export default function IdeaVault() {
                                     <p className="text-sm text-gray-400">{idea.description}</p>
                                 </div>
                                 <button
-                                    onClick={() => deleteIdea(idea.id || idea._id)}
+                                    onClick={() => deleteIdea(idea._id)}
                                     className="text-red-400 hover:text-red-500"
                                     aria-label="Delete"
                                     title="Delete"

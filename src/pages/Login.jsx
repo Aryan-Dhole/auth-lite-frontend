@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -16,11 +17,13 @@ function Login() {
             const res = await API.post("/auth/login", { email, password });
             localStorage.setItem("token", res.data.token);
             setMessage(res.data.msg || "Login Successful!");
+            toast.success("Login Successful!")
             console.log(res.data);
             navigate("/ideavault")
 
         } catch (err) {
             setMessage("Login failed. Please check the credentials.");
+            toast.error("Login failed!")
         }
     }
 
