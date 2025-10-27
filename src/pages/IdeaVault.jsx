@@ -9,6 +9,10 @@ export default function IdeaVault() {
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("");
     const [confirmDelete, setConfirmDelete] = useState(null)
+    const [editingIdea, setEditingIdea] = useState("null");
+    const [editTitle, setEditTitle] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+
     const [loading, setLoading] = useState(false);
     const [adding, setAdding] = useState(false)
     const navigate = useNavigate();
@@ -139,8 +143,6 @@ export default function IdeaVault() {
                     {loading ? (
                         <>
                             <SkeletonIdea />
-                            <SkeletonIdea />
-                            <SkeletonIdea />
                         </>
                     ) : ideas.length === 0 ? (
                         <p className="text-gray-400 text-center italic mt-12">Your vault is empty — start adding your genius 💡</p>
@@ -154,18 +156,88 @@ export default function IdeaVault() {
                                     <h3 className="font-semibold">{idea.title}</h3>
                                     <p className="text-sm text-gray-400">{idea.description}</p>
                                 </div>
-                                <button
-                                    onClick={() => setConfirmDelete(idea._id)}
-                                    className="text-red-400 hover:text-red-500"
-                                    aria-label="Delete"
-                                    title="Delete"
-                                >
-                                    🗑
-                                </button>
+                                <div>
+                                    <button
+                                        onClick={() => {
+                                            setEditingIdea(idea);
+                                            setEditTitle(idea.title);
+                                            setEditDescription(idea.description);
+                                        }}
+                                        className="text-yellow-400 hover:text-yellow-500 mr-3"
+                                    >
+                                        ✏️
+                                    </button>
+                                    <button
+                                        onClick={() => setConfirmDelete(idea._id)}
+                                        className="text-red-400 hover:text-red-500"
+                                        aria-label="Delete"
+                                        title="Delete"
+                                    >
+                                        🗑
+                                    </button>
+                                </div>
                             </div>
                         ))
                     )}
                 </div>
+                {editingIdea && (
+                    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+                        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 max-w-sm w-full">
+                            <h2 className="text-lg font-semibold mb-4 text-white text-center">
+                                Edit Idea
+                            </h2>
+                            <input
+                                className="w-full border border-gray-700 bg-gray-900 p-2 mb-3 rounded text-white"
+                                value={editTitle}
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                placeholder="Title"
+                            />
+                            <textarea
+                                className="w-full border border-gray-700 bg-gray-900 p-2 mb-4 rounded text-white"
+                                value={editDescription}
+                                onChange={(e) => setEditDescription(e.target.value)}
+                                placeholder="Description"
+                            />
+                            <div className="flex justify-center space-x-4">
+                                <button
+                                    onClick={async () => {
+                                        const token = localStorage.getItem("token");
+                                        try {
+                                            const res = await API.put(
+                                                `/ideas/${editingIdea._id}`,
+                                                { title: editTitle, description: editDescription },
+                                                { headers: { Authorization: `Bearer ${token}` } }
+                                            );
+                                            // update local state
+                                            setIdeas(prev =>
+                                                prev.map(idea =>
+                                                    idea._id === editingIdea._id ? res.data : idea
+                                                )
+                                            );
+                                            toast.success("Idea updated!");
+                                            setEditingIdea(null);
+                                        } catch (err) {
+                                            console.error("Update failed:", err);
+                                            toast.error("Failed to update");
+                                        }
+                                    }}
+                                    className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+                                >
+                                    Save
+                                </button>
+                                <button
+                                    onClick={() => setEditingIdea(null)}
+                                    className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-white"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Cinfirmation delete box */}
+
                 {confirmDelete && (
                     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
                         <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center max-w-sm shadow-lg">
