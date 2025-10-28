@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import API from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import Navbar from "../components/Navbar";
 
 
 export default function IdeaVault() {
@@ -9,7 +10,7 @@ export default function IdeaVault() {
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("");
     const [confirmDelete, setConfirmDelete] = useState(null)
-    const [editingIdea, setEditingIdea] = useState("null");
+    const [editingIdea, setEditingIdea] = useState(null);
     const [editTitle, setEditTitle] = useState("");
     const [editDescription, setEditDescription] = useState("");
 
@@ -101,19 +102,11 @@ export default function IdeaVault() {
     return (
         <div className="min-h-screen bg-gray-900 text-white relative">
             {/* Logout top-right */}
-            <button
-                onClick={() => {
-                    localStorage.removeItem("token");
-                    navigate("/login");
-                }}
-                className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
-            >
-                Logout
-            </button>
+            <Navbar />
 
             {/* Centered content */}
-            <div className="mx-auto max-w-2xl px-6 pt-16">
-                <h1 className="text-3xl font-bold mb-6 text-center">IdeaVault  💡</h1>
+            <div className="mx-auto max-w-2xl px-6 pt-10">
+                <h1 className="text-2xl text-gray-200 font-semibold mb-6 text-center">Start writing your ideas below!</h1>
 
                 {/* Form */}
                 <form onSubmit={addIdea} className="mb-6">
@@ -163,13 +156,13 @@ export default function IdeaVault() {
                                             setEditTitle(idea.title);
                                             setEditDescription(idea.description);
                                         }}
-                                        className="text-yellow-400 hover:text-yellow-500 mr-3"
+                                        className="text-yellow-400 hover:text-yellow-500 hover:scale-110 hover:cursor-pointer mr-3"
                                     >
                                         ✏️
                                     </button>
                                     <button
                                         onClick={() => setConfirmDelete(idea._id)}
-                                        className="text-red-400 hover:text-red-500"
+                                        className="text-red-400 hover:text-red-500 hover:scale-110 hover:cursor-pointer"
                                         aria-label="Delete"
                                         title="Delete"
                                     >
