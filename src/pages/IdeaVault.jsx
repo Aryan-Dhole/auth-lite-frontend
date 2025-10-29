@@ -257,11 +257,9 @@ export default function IdeaVault() {
                         </div>
                     </div>
                 )}
-
             </div>
         </div>
     );
-
 }
 
 
